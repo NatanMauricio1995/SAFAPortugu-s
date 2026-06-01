@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formatador SAFA — Língua Portuguesa</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Formatador SAFA — Língua Portuguesa</h1>
+      <p>Interface provisória para teste do programa.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="status" id="status">
+      Carregando interface...
+    </div>
+
+    <nav class="tabs" aria-label="Abas do programa">
+      <button class="tab-btn active" data-tab="prompt">Formulador de Prompt</button>
+      <button class="tab-btn" data-tab="formatador">Formatador de Item</button>
+      <button class="tab-btn" data-tab="safa">Padrão SAFA</button>
+      <button class="tab-btn" data-tab="png">Montagem das Imagens</button>
+    </nav>
+
+    <section class="tab active" id="tab-prompt">
+      <h2>Aba 1 — Formulador de Prompt</h2>
+      <p class="muted">Teste inicial da tela. Esta interface ainda é provisória.</p>
+
+      <div class="grid">
+        <div>
+          <label for="componente">Componente</label>
+          <input id="componente" value="Língua Portuguesa" readonly>
+        </div>
+
+        <div>
+          <label for="modo_trabalho">Modo de trabalho</label>
+          <select id="modo_trabalho">
+            <option>Novo Item</option>
+            <option>Revisão</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="matriz_base">Matriz-base</label>
+          <select id="matriz_base">
+            <option>SAEB 2001</option>
+            <option>SAEB 2018</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="etapa_matriz">Etapa da matriz</label>
+          <select id="etapa_matriz">
+            <option>5º ano</option>
+            <option>9º ano</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="ano_alvo">Ano-alvo</label>
+          <select id="ano_alvo">
+            <option>2º ano</option>
+            <option>3º ano</option>
+            <option>4º ano</option>
+            <option>5º ano</option>
+            <option>6º ano</option>
+            <option>7º ano</option>
+            <option>8º ano</option>
+            <option>9º ano</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="codigo_alvo">Código-alvo</label>
+          <select id="codigo_alvo">
+            <option>D1 - Localizar informações explícitas em um texto</option>
+            <option>D3 - Inferir o sentido de uma palavra ou expressão</option>
+            <option>D4 - Inferir uma informação implícita em um texto</option>
+            <option>D6 - Identificar o tema de um texto</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="dificuldade">Dificuldade</label>
+          <select id="dificuldade">
+            <option>Fácil</option>
+            <option>Médio</option>
+            <option>Difícil</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="gabarito">Gabarito desejado / informado</label>
+          <select id="gabarito">
+            <option>A</option>
+            <option>B</option>
+            <option>C</option>
+            <option>D</option>
+            <option>Não informado</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="tipo_suporte">Tipo de suporte</label>
+          <select id="tipo_suporte">
+            <option>Sem suporte</option>
+            <option>Texto-base</option>
+            <option>Imagem</option>
+            <option>Tabela</option>
+            <option>Gráfico</option>
+            <option>Malha</option>
+            <option>Outro</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="tema_contexto">Tema/contexto</label>
+          <input id="tema_contexto" placeholder="Ex.: água nas casas">
+        </div>
+
+        <div class="full">
+          <label for="texto_base">Texto-base</label>
+          <textarea id="texto_base" placeholder="Cole aqui o texto-base, se houver."></textarea>
+        </div>
+
+        <div>
+          <label for="fonte_autor">Fonte/autor</label>
+          <input id="fonte_autor" placeholder="Ex.: Texto elaborado para fins didáticos.">
+        </div>
+
+        <div>
+          <label for="descricao_suporte">Descrição do suporte</label>
+          <input id="descricao_suporte" placeholder="Descreva imagem, tabela, gráfico etc.">
+        </div>
+
+        <div class="full">
+          <label for="restricoes">Restrições</label>
+          <textarea id="restricoes" placeholder="Informe restrições pedagógicas ou técnicas."></textarea>
+        </div>
+
+        <div class="full">
+          <label for="item_base">Item-base / Item para revisão</label>
+          <textarea id="item_base" placeholder="Cole aqui o item-base ou item para revisão."></textarea>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="primary" type="button" onclick="testarBackend()">Testar backend</button>
+        <button class="primary" type="button" onclick="carregarMatrizes()">Carregar matrizes</button>
+        <button class="primary" type="button" onclick="gerarPromptTeste()">Gerar prompt de teste</button>
+        <button class="secondary" type="button" onclick="limparSaida()">Limpar saída</button>
+      </div>
+
+      <h3>Saída</h3>
+      <pre id="saida">Aguardando ação...</pre>
+    </section>
+
+    <section class="tab" id="tab-formatador">
+      <h2>Aba 2 — Formatador de Item</h2>
+      <p>Esta aba será ligada ao módulo <code>core/word_formatter.py</code>.</p>
+
+      <label for="texto_bruto">Texto bruto</label>
+      <textarea id="texto_bruto" placeholder="Cole aqui o texto bruto do item."></textarea>
+
+      <div class="actions">
+        <button class="primary" type="button" onclick="funcaoNaoImplementada('Formatador de Item')">Gerar Word</button>
+        <button class="secondary" type="button" onclick="document.getElementById('texto_bruto').value = ''">Limpar</button>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-safa">
+      <h2>Aba 3 — Padrão SAFA</h2>
+      <p>Esta aba será ligada ao módulo <code>core/safa_processor.py</code>.</p>
+      <p class="muted">Limitador previsto: <code># Item 1</code>, <code># Item 2</code>, etc.</p>
+
+      <div class="actions">
+        <button class="primary" type="button" onclick="funcaoNaoImplementada('Padrão SAFA')">Processar Padrão SAFA</button>
+      </div>
+    </section>
+
+    <section class="tab" id="tab-png">
+      <h2>Aba 4 — Montagem das Imagens</h2>
+      <p>Esta aba será ligada ao módulo <code>core/png_converter.py</code>.</p>
+      <p class="muted">Requer Windows com Microsoft Word instalado.</p>
+
+      <div class="actions">
+        <button class="primary" type="button" onclick="funcaoNaoImplementada('Montagem das Imagens')">Converter DOCX para PNG</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="scripts.js"></script>
+</body>
+</html>
