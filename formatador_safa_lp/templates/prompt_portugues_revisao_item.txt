@@ -1,226 +1,28 @@
-PROMPT PADRÃO — FORMATADOR SAFA LP
-Versão do template: 1.0.0
-Componente: Língua Portuguesa
+### PROMPT DE REVISÃO: {{item_base_ou_revisao}} - {{componente}}
+Versão Template: {{versao_template}} | Gerado em: {{data_geracao}}
 
-REGRAS INVIOLÁVEIS
+#### CONFIGURAÇÕES DE REVISÃO:
+- Modo de Trabalho: {{modo_trabalho}}
+- Matriz de Referência: {{matriz_base}} (Etapa: {{etapa_matriz}})
+- Público-Alvo: {{ano_alvo}}
+- Código-Alvo: {{codigo_alvo}} - {{descricao_codigo}}
+- Nível de Dificuldade: {{dificuldade}}
+- Tema/Contexto: {{tema_contexto}}
 
-1 - Trabalhar exclusivamente com itens de Língua Portuguesa.
-2 - Avaliar UMA única habilidade/descritor: exatamente o código-alvo informado.
-3 - Gerar ou revisar internamente conforme os parâmetros preenchidos pelo usuário.
-4 - Antes de responder, checar descritor/habilidade, ano-alvo, dificuldade, suporte, restrições, gabarito, distratores, formato, justificativas e explicação ao aluno.
-5 - Se houver conflito real de parâmetros, informação essencial ausente, incompatibilidade entre gabarito e comando, ausência de gabarito único, descritor inadequado ou comando ambíguo, parar e perguntar objetivamente.
-6 - Formatação: não usar quebras de linha manuais (^l). Usar apenas quebras de parágrafo (^p). Não inserir line breaks dentro de um mesmo parágrafo; cada nova linha deve ser um novo parágrafo.
-7 - A seção TABELA DE CHECAGEM TÉCNICA deve ser entregue exclusivamente com TAB real entre as colunas, dentro de bloco de código. É proibido usar | na tabela. Deve haver exatamente 1 TAB entre cada coluna.
-8 - A explicação ao aluno deve marcar como correta apenas a alternativa do gabarito. Nunca escrever que todas as alternativas estão incorretas.
+#### ITEM PARA REVISÃO:
+- Suporte Original: {{tipo_suporte}} ({{descricao_suporte}})
+- Texto-Base: {{texto_base}}
+- Fonte: {{fonte_autor}}
 
+#### RESTRIÇÕES E ADAPTAÇÃO:
+- Restrições Adicionais: {{restricoes}}
+- {{observacao_adaptacao}}
 
-PARÂMETROS DO ITEM
+#### INSTRUÇÕES DE REVISÃO:
+1. Analise o item fornecido e revise-o para garantir total alinhamento ao código {{codigo_alvo}}.
+2. Ajuste a linguagem para o {{ano_alvo}}, se necessário.
+3. Mantenha o gabarito como {{gabarito}}.
+4. Apresente a versão final revisada com enunciado e alternativas.
 
-Modo de trabalho: Revisar item existente
-Componente: {{COMPONENTE}}
-Matriz-base: {{MATRIZ_BASE}}
-Etapa da matriz-base: {{ETAPA_MATRIZ}}
-Código-alvo: {{CODIGO_ALVO}} - {{DESCRICAO_CODIGO}}
-Ano-alvo do item: {{ANO_ALVO}}
-Dificuldade pretendida: {{DIFICULDADE}}
-Tema/contexto: {{TEMA_CONTEXTO}}
-Tipo de suporte: {{TIPO_SUPORTE}}
-Descrição/conteúdo do suporte: {{DESCRICAO_SUPORTE}}
-Texto-base: {{TEXTO_BASE}}
-Autor/fonte: {{AUTOR_FONTE}}
-Restrições: {{RESTRICOES}}
-Gabarito informado: {{GABARITO_INFORMADO}}
-Item para revisão: {{ITEM_PARA_REVISAO}}
-
-Observação de adaptação: se o ano-alvo for diferente da etapa da matriz-base, verificar se a linguagem, a extensão do texto, a demanda cognitiva e a complexidade do suporte estão adequadas ao ano-alvo, sem alterar o foco do código-alvo.
-
-
-REGRAS DE REVISÃO DO ITEM
-
-Analisar o item exatamente como foi enviado.
-Verificar obrigatoriamente:
-- se o item avalia exatamente o código-alvo informado;
-- se há apenas uma habilidade/descritor avaliado;
-- se o comando é claro, positivo, mensurável e adequado ao ano-alvo;
-- se o gabarito informado está correto, quando houver;
-- se há gabarito único;
-- se alguma alternativa incorreta também pode ser considerada correta;
-- se os distratores são plausíveis;
-- se cada distrator representa um erro típico diferente;
-- se há distrator absurdo, aleatório, genérico ou fora do campo semântico;
-- se a linguagem está adequada ao ano-alvo;
-- se a dificuldade pretendida é coerente;
-- se o suporte, quando houver, é necessário e não entrega o gabarito;
-- se o texto-base traz todas as informações necessárias;
-- se a fonte/autor aparece quando houver texto-base;
-- se há ambiguidade, dupla interpretação ou conhecimento externo indevido.
-
-Se o item estiver adequado, manter sua estrutura e fazer apenas ajustes mínimos de padronização.
-Se o item estiver adequado com ajustes, indicar os ajustes técnicos e apresentar a versão final corrigida.
-Se o item estiver inadequado, indicar o problema técnico e apresentar uma versão reformulada completa.
-Não alterar desnecessariamente texto-base, cenário, comando, alternativas ou estrutura quando o problema puder ser resolvido com ajuste pontual.
-
-
-SUPORTE — REGRA CONDICIONAL
-
-Se Tipo de suporte = Sem suporte, não criar seção de suporte.
-Se Tipo de suporte = Texto-base, manter o texto-base na íntegra e informar a fonte/autor.
-Se Tipo de suporte = Imagem, Tabela, Gráfico, Malha ou Outro, verificar/criar suporte necessário, tecnicamente reprodutível, legível e sem pistas indevidas do gabarito.
-O suporte não pode conter marcações como “correto”, “resposta”, setas, destaques ou elementos que entreguem o gabarito.
-
-
-REGRAS DE JUSTIFICATIVA — LÍNGUA PORTUGUESA
-
-JUSTIFICATIVA DO GABARITO
-Começar exatamente com:
-**Está correta. O aluno provavelmente**
-
-A justificativa do gabarito deve incluir:
-- leitura do comando;
-- evidência textual essencial;
-- trecho, palavra, expressão, relação textual ou inferência que sustenta a resposta;
-- explicação de por que não depende de opinião pessoal ou conhecimento externo;
-- explicação de por que é a única alternativa correta;
-- vínculo explícito com o código-alvo.
-
-JUSTIFICATIVA TÉCNICA DOS DISTRATORES
-Para cada alternativa incorreta, começar exatamente com:
-**Está incorreta. O aluno provavelmente**
-
-Cada justificativa técnica deve indicar:
-- erro típico principal;
-- raciocínio inadequado que levaria à alternativa;
-- consequência do erro;
-- teste rápido de inconsistência;
-- distinção em relação ao gabarito.
-
-Erros típicos possíveis em Língua Portuguesa:
-- localização incorreta da informação;
-- confusão entre informações próximas;
-- inferência sem apoio no texto;
-- generalização indevida;
-- escolha de informação secundária;
-- confusão entre tema, assunto, finalidade, fato, opinião ou sentido de palavra;
-- uso de conhecimento externo;
-- leitura parcial do comando;
-- leitura literal indevida quando o descritor exige inferência;
-- inferência indevida quando o descritor exige localização explícita.
-
-
-EXPLICAÇÃO AO ALUNO
-
-Na explicação ao aluno, cada alternativa deve começar de acordo com sua situação real.
-
-A alternativa correta deve começar exatamente com:
-**Está correta. Se você marcou esta alternativa, provavelmente**
-
-As alternativas incorretas devem começar exatamente com:
-**Está incorreta. Se você marcou esta alternativa, possivelmente**
-
-Nunca escrever que todas as alternativas estão incorretas.
-A explicação deve ser didática, clara e adequada ao ano-alvo.
-Sempre que fizer sentido, orientar o aluno a voltar ao texto, ao suporte, aos dados do enunciado ou ao comando para conferir a resposta.
-Não usar linguagem excessivamente técnica.
-Não apresentar apenas o gabarito.
-Não humilhar, ironizar ou culpar o aluno.
-Limite aproximado: até 450 caracteres por alternativa.
-
-
-FORMATO DE ENTREGA OBRIGATÓRIO
-
-Responder exatamente nesta ordem:
-
-1. MINI RELATÓRIO FINAL
-2. TABELA DE CHECAGEM TÉCNICA
-3. ITEM FINAL
-4. JUSTIFICATIVA DO GABARITO
-5. JUSTIFICATIVA TÉCNICA DOS DISTRATORES
-6. EXPLICAÇÃO AO ALUNO
-
-MINI RELATÓRIO FINAL
-
-• Modo de trabalho: Criar item inédito / Revisar item existente
-• Matriz-base: matriz + etapa + código + descrição
-• Ano-alvo e dificuldade
-• Tema/contexto e classificação do contexto: Pessoal / Ocupacional / Social / Científico
-• Taxonomia Revisada: processo cognitivo + dimensão do conhecimento
-• Observação de adaptação, se ano-alvo ≠ etapa da matriz-base
-• Diagnóstico técnico, somente no modo Revisar item existente: adequado / adequado com ajustes / inadequado
-
-TABELA DE CHECAGEM TÉCNICA
-
-Entregar em bloco de código, com TAB real entre as colunas. Não usar pipes.
-
-Critério	Status	Evidência/Ajuste
-Unicidade do gabarito	OK/REVISAR	[evidência]
-Clareza do comando	OK/REVISAR	[evidência]
-Adequação ao ano-alvo	OK/REVISAR	[evidência]
-Distratores plausíveis e distintos	OK/REVISAR	[evidência]
-Aderência ao descritor/habilidade	OK/REVISAR	[evidência]
-Restrições atendidas	OK/REVISAR	[evidência]
-Dificuldade coerente	OK/REVISAR	[evidência]
-Linguagem adequada	OK/REVISAR	[evidência]
-Ordem das alternativas	OK/REVISAR	[evidência]
-Suporte necessário e reprodutível, se houver	OK/NA/REVISAR	[evidência]
-Fonte/autor presente, se houver texto-base	OK/NA/REVISAR	[evidência]
-
-ITEM FINAL
-
-Texto-base
-[Somente se houver. Inserir o texto-base na íntegra.]
-
-Fonte: [inserir fonte/autor, quando houver texto-base.]
-
-Suporte
-[Somente se houver suporte diferente de texto-base.]
-
-Enunciado
-[enunciado]
-
-Comando
-[comando]
-
-Alternativas
-A) [alternativa]
-B) [alternativa]
-C) [alternativa]
-D) [alternativa]
-
-Gabarito: [letra]
-
-JUSTIFICATIVA DO GABARITO
-[começar conforme regra]
-
-JUSTIFICATIVA TÉCNICA DOS DISTRATORES
-[uma justificativa para cada alternativa incorreta]
-
-EXPLICAÇÃO AO ALUNO
-A) [Está correta/incorreta...]
-B) [Está correta/incorreta...]
-C) [Está correta/incorreta...]
-D) [Está correta/incorreta...]
-
-
-REGRA FINAL DE AUTOCHECAGEM
-
-Antes de enviar a resposta final, revisar internamente:
-- O modo de trabalho foi identificado?
-- O código-alvo foi respeitado?
-- O item avalia uma única habilidade?
-- O comando está claro?
-- O gabarito é único?
-- O gabarito informado/desejado foi respeitado?
-- As alternativas estão paralelas?
-- Os distratores são plausíveis e distintos?
-- Há algum distrator absurdo?
-- A linguagem está adequada ao ano-alvo?
-- A dificuldade está coerente?
-- O suporte, se houver, é necessário e não entrega resposta?
-- A fonte/autor aparece quando há texto-base?
-- A tabela usa TAB real?
-- A justificativa do gabarito começa corretamente?
-- As justificativas dos distratores começam corretamente?
-- A explicação ao aluno diferencia alternativa correta e incorretas?
-- A versão final está pronta para uso?
-
-Somente depois dessa checagem, enviar a versão final.
+---
+FIM DO PROMPT
