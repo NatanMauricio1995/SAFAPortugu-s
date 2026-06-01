@@ -1,0 +1,22 @@
+{
+    "paginacao": {
+        "tamanho_folha": "A4",
+        "margens": {
+            "superior": 2.54,
+            "inferior": 2.54,
+            "esquerda": 1.9,
+            "direita": 1.9
+        },
+        "unidade": "cm"
+    },
+    "estilos": {
+        "fonte_padrao": "Arial",
+        "tamanho_corpo": 14,
+        "tamanho_titulo": 16,
+        "negrito_secoes": true
+    },
+    "geometria_safa": {
+        "paginas_por_item": 6,
+        "largura_caixa_mm": 170
+    }
+}
