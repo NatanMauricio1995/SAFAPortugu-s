@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Adaptativa — 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #080b10;
+  --bg-2:        #0e1219;
+  --bg-3:        #141922;
+  --bg-hover:    #1a2030;
+  --border:      rgba(255,255,255,0.06);
+  --border-md:   rgba(255,255,255,0.10);
+  --text:        #e2e6f0;
+  --text-2:      #7a839e;
+  --text-3:      #3d4460;
+  --accent:      #4f7fff;
+  --accent-2:    #3a5fd9;
+  --accent-glow: rgba(79,127,255,0.12);
+  --success:     #34d399;
+  --warn:        #fbbf24;
+  --danger:      #f87171;
+  --radius:      12px;
+  --radius-sm:   8px;
+  --sidebar:     220px;
+  --topbar-h:    52px;
+  --font:        'Geist', system-ui, sans-serif;
+  --mono:        'Geist Mono', monospace;
+  --transition:  0.15s ease;
+  --logo-dark-vis:  block;
+  --logo-light-vis: none;
+}
+
+body.theme-light {
+  --bg:          #f0f2f7;
+  --bg-2:        #ffffff;
+  --bg-3:        #e6e9f4;
+  --bg-hover:    #dde1f0;
+  --border:      rgba(0,0,0,0.06);
+  --border-md:   rgba(0,0,0,0.10);
+  --text:        #0e1219;
+  --text-2:      #4e566e;
+  --text-3:      #9aa0b8;
+  --accent:      #3a5fd9;
+  --accent-2:    #2d4db3;
+  --accent-glow: rgba(58,95,217,0.10);
+  --logo-dark-vis:  none;
+  --logo-light-vis: block;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13.5px;
+  line-height: 1.5;
+  height: 100dvh;
+  overflow: hidden;
+  transition: background var(--transition), color var(--transition);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app { display: flex; height: 100dvh; }
+
+/* ── Overlay ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(3px);
+  z-index: 99;
+  opacity: 0;
+  transition: opacity 0.22s;
+}
+.overlay.active { opacity: 1; }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: var(--sidebar);
+  background: var(--bg-2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 0 8px 16px;
+  gap: 1px;
+  flex-shrink: 0;
+  transition: background var(--transition), transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 100;
+}
+
+/* ── Brand / Logo — MAIOR ── */
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 12px 20px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+.logo-wrap {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.logo-wrap img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.25s;
+}
+
+.logo-dark  { display: var(--logo-dark-vis);  }
+.logo-light { display: var(--logo-light-vis); }
+
+/* Fallback: letra quando imagem não carrega */
+.logo-fallback {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--accent) 0%, #2d4db3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+
+.brand-text {
+  text-align: center;
+}
+.brand-text strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  display: block;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.brand-text span {
+  font-size: 11px;
+  color: var(--text-3);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+/* ── Nav items ── */
+.nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 12.5px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  text-align: left;
+  width: 100%;
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+
+.nav-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-3);
+  flex-shrink: 0;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.nav:hover { background: var(--bg-hover); color: var(--text); }
+.nav:hover .nav-dot { transform: scale(1.6); }
+.nav.active { background: var(--accent-glow); color: var(--accent); font-weight: 500; }
+.nav.active .nav-dot { background: var(--accent); transform: scale(1.6); }
+
+.spacer { flex: 1; min-height: 8px; }
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-md);
+  background: transparent;
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  width: 100%;
+  flex-shrink: 0;
+  margin-top: 8px;
+  letter-spacing: -0.01em;
+}
+.theme-toggle:hover { background: var(--bg-hover); color: var(--text); }
+
+.toggle-track {
+  width: 28px;
+  height: 16px;
+  background: var(--bg-3);
+  border-radius: 99px;
+  position: relative;
+  flex-shrink: 0;
+  transition: background var(--transition);
+  border: 1px solid var(--border-md);
+}
+.toggle-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-3);
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.22s cubic-bezier(0.4,0,0.2,1), background 0.2s;
+}
+body.theme-light .toggle-track { background: var(--accent-glow); border-color: var(--accent); }
+body.theme-light .toggle-thumb { background: var(--accent); transform: translateX(12px); }
+
+/* ── Main ── */
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* ── Topbar ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  height: var(--topbar-h);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-2);
+  flex-shrink: 0;
+  gap: 12px;
+  transition: background var(--transition);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.hamburger span {
+  display: block;
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--text-2);
+  transition: background var(--transition);
+}
+.hamburger:hover span { background: var(--text); }
+
+.topbar h1 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.02em;
+}
+
+.status-pill {
+  font-size: 11px;
+  color: var(--text-3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  background: var(--bg-3);
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.01em;
+}
+.status-pill::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--warn);
+  flex-shrink: 0;
+}
+.status-pill.ok::before   { background: var(--success); }
+.status-pill.err::before  { background: var(--danger); }
+
+/* ── Content area ── */
+.content-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Tabs ── */
+.tab { display: none; }
+.tab.active { display: contents; }
+
+/* ── Layout columns ── */
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.card h2 {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-3);
+}
+
+.card.flex { display: flex; flex-direction: column; }
+.card.flex textarea { flex: 1; min-height: 140px; }
+
+/* ── Form elements ── */
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+label.check {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+label.check input[type="checkbox"],
+label.check input[type="radio"] {
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent);
+}
+input:disabled { opacity: 0.35; cursor: not-allowed; }
+
+input[type="text"],
+input[type="number"],
+input:not([type]),
+select,
+textarea {
+  background: var(--bg);
+  border: 1px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 12.5px;
+  padding: 7px 10px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+  width: 100%;
+  letter-spacing: -0.01em;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%236b7280' d='M5 7L1 3h8z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  cursor: pointer;
+}
+textarea {
+  resize: vertical;
+  min-height: 120px;
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+textarea.mono {
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+
+/* ── Buttons ── */
+.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), transform 0.1s, box-shadow var(--transition);
+  width: 100%;
+  margin-top: 4px;
+  letter-spacing: -0.01em;
+}
+.primary:hover { background: var(--accent-2); box-shadow: 0 4px 16px var(--accent-glow); }
+.primary:active { transform: scale(0.98); }
+
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-md);
+  background: transparent;
+  color: var(--text-2);
+  font-family: var(--font);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+}
+.secondary:hover { background: var(--bg-hover); color: var(--text); }
+
+/* Clear button — red tinted */
+.btn-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(248,113,113,0.18);
+  background: transparent;
+  color: var(--danger);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+  opacity: 0.7;
+}
+.btn-clear:hover {
+  background: rgba(248,113,113,0.08);
+  border-color: rgba(248,113,113,0.35);
+  opacity: 1;
+}
+
+/* Paste button — accent tinted */
+.btn-paste {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(79,127,255,0.20);
+  background: transparent;
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+  opacity: 0.75;
+}
+.btn-paste:hover {
+  background: var(--accent-glow);
+  border-color: rgba(79,127,255,0.40);
+  opacity: 1;
+}
+
+.btn-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.btn-row .secondary { flex: 1; }
+
+/* ── Log ── */
+.logs { flex-shrink: 0; }
+.logs pre {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-2);
+  max-height: 64px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+pre#fmt_result,
+pre#safa_result,
+pre#png_result {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-2);
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  margin-top: 12px;
+  min-height: 36px;
+  border: 1px solid var(--border);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-md); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-3); }
+
+/* ── Divider in sidebar ── */
+.nav-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 4px;
+  flex-shrink: 0;
+}
+
+/* ════ RESPONSIVE ════ */
+@media (max-width: 900px) {
+  .cols { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  body { overflow: hidden; }
+  .overlay { display: block; pointer-events: none; }
+  .overlay.active { pointer-events: auto; }
+  .sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    height: 100dvh;
+    transform: translateX(-100%);
+    box-shadow: 8px 0 40px rgba(0,0,0,0.4);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .hamburger { display: flex; }
+  .topbar { padding: 0 16px; }
+  .content-area { padding: 14px 16px; }
+  .card { padding: 14px; }
+  .status-pill { display: none; }
+}
+
+@media (max-width: 400px) {
+  :root { --topbar-h: 48px; }
+  .topbar h1 { font-size: 13px; }
+  .nav { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="app">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="logo-wrap">
+        <img class="logo-dark"  src="assets/Logo_modo_escuro.png" alt="Adaptativa"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='none'; document.getElementById('logo-fallback-dark').style.display='flex';" />
+        <img class="logo-light" src="assets/Logo_modo_claro.png"  alt="Adaptativa"
+             onerror="this.style.display='none';" />
+      </div>
+      <div id="logo-fallback-dark" class="logo-fallback" style="display:none;">A</div>
+      <div class="brand-text">
+        <strong>Adaptativa</strong>
+        <span>2026</span>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <button class="nav active" data-tab="txt">
+        <span class="nav-dot"></span>Gerador de Prompt
+      </button>
+      <button class="nav" data-tab="fmt">
+        <span class="nav-dot"></span>Formatador de item
+      </button>
+      <button class="nav" data-tab="safa">
+        <span class="nav-dot"></span>Padrão SAFA
+      </button>
+      <button class="nav" data-tab="png">
+        <span class="nav-dot"></span>Montagem das imagens
+      </button>
+    </div>
+
+    <div class="spacer"></div>
+
+    <button id="themeBtn" class="theme-toggle" aria-label="Alternar tema">
+      <span id="themeLabel">Tema escuro</span>
+      <div class="toggle-track"><div class="toggle-thumb"></div></div>
+    </button>
+  </aside>
+
+  <!-- ── Main ── -->
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <h1 id="pageTitle">Gerador de Prompt</h1>
+      </div>
+      <span class="status-pill" id="backendStatus">Conectando…</span>
+    </header>
+
+    <div class="content-area">
+
+      <!-- ── Tab: Gerador de Prompt ── -->
+      <section id="txt" class="tab active">
+        <div class="cols">
+          <div class="card">
+            <div class="card-header">
+              <h2>Parâmetros</h2>
+            </div>
+            <label>Componente
+              <select id="componente">
+                <option>Matemática</option>
+                <option>Língua Portuguesa</option>
+              </select>
+            </label>
+            <label>Matriz-base
+              <select id="matriz_base">
+                <option>SAEB 2001</option>
+                <option>SAEB 2018</option>
+                <option>SPAECE</option>
+              </select>
+            </label>
+            <label>Etapa da matriz
+              <select id="etapa">
+                <option>5º ano</option>
+                <option>2º ano</option>
+                <option>9º ano</option>
+              </select>
+            </label>
+            <label>Código-alvo
+              <input id="codigo_alvo" placeholder="Ex.: D13" />
+            </label>
+            <label>Ano-alvo
+              <input id="ano_alvo" value="4º ano" />
+            </label>
+            <label>Dificuldade</label>
+              <div class="radio-group" style="margin-bottom:10px;">
+                <label class="check">
+                  <input type="radio" name="dificuldade" id="dif_facil" value="Fácil" />
+                  Fácil
+                </label>
+                <label class="check" style="margin-top:6px;">
+                  <input type="radio" name="dificuldade" id="dif_medio" value="Médio" checked />
+                  Médio
+                </label>
+                <label class="check" style="margin-top:6px;">
+                  <input type="radio" name="dificuldade" id="dif_dificil" value="Difícil" />
+                  Difícil
+                </label>
+              </div>
+            <label>Tema / contexto
+              <input id="tema" placeholder="Opcional" />
+            </label>
+            <label>Suporte
+              <select id="suporte">
+                <option>sem imagem</option>
+                <option>com imagem</option>
+                <option>tabela</option>
+                <option>gráfico</option>
+                <option>malha</option>
+              </select>
+            </label>
+            <label>Restrições
+              <input id="restricoes" placeholder="Opcional" />
+            </label>
+            <label>Gabarito desejado
+              <select id="gabarito">
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+                <option>D</option>
+              </select>
+            </label>
+            <button class="primary" id="gerarTxt">Gerar prompt</button>
+          </div>
+
+          <div class="stack">
+            <div class="card flex">
+              <div class="card-header">
+                <h2>Item base</h2>
+              </div>
+              <textarea id="item_base" placeholder="Cole aqui o item completo"></textarea>
+            </div>
+            <div class="card flex">
+              <div class="card-header">
+                <h2>Prompt gerado</h2>
+              </div>
+              <textarea id="txt_saida" class="mono" style="min-height:160px;"></textarea>
+              <div style="margin-top:10px;">
+                <button id="copiarTxt" class="secondary">Copiar Prompt</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Tab: Formatador de item ── -->
+      <section id="fmt" class="tab">
+        <div class="cols">
+          <div class="card flex">
+            <div class="card-header">
+              <h2>Texto bruto</h2>
+              <div class="btn-row" style="gap:5px;">
+                <button class="btn-paste" id="fmt_paste">
+                  <svg width="11" height="11" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="9" height="10" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M4 5.5H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  Colar
+                </button>
+                <button class="btn-clear" id="fmt_clear">
+                  <svg width="11" height="11" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                  Limpar
+                </button>
+              </div>
+            </div>
+            <textarea id="fmt_raw" placeholder="Cole o item bruto aqui" style="min-height:300px;"></textarea>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h2>Saída Word</h2>
+            </div>
+            <label>Caminho do .docx
+              <input id="fmt_out" placeholder="C:\saida\item_formatado.docx" />
+            </label>
+            <div id="fmt_validation" style="display:none; background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.30); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 10px; font-size: 11.5px; color: var(--danger); font-family: var(--mono); line-height: 1.7; white-space: pre-wrap;"></div>
+            <button id="fmt_btn" class="primary">Gerar Word</button>
+            <pre id="fmt_result"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Tab: Padrão SAFA ── -->
+      <section id="safa" class="tab">
+        <div class="cols">
+          <div class="card">
+            <div class="card-header">
+              <h2>Arquivos Word</h2>
+              <button class="btn-clear" id="safa_clear_list">
+                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Limpar lista
+              </button>
+            </div>
+            <div class="btn-row" style="margin-bottom:10px;">
+              <button id="safa_pick" class="secondary">Selecionar Word(s)</button>
+            </div>
+            <textarea id="safa_files" class="mono" placeholder="Um caminho por linha" style="min-height:200px;"></textarea>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h2>Configurações</h2>
+            </div>
+            <label>Pasta de saída
+              <div class="btn-row">
+                <input id="safa_out" placeholder="Selecione ou digite o caminho" />
+                <button id="safa_out_pick" class="secondary" style="width:auto;white-space:nowrap;">Selecionar</button>
+              </div>
+            </label>
+            <label class="check" style="margin-bottom:12px;">
+              <input type="checkbox" id="safa_ensinart" checked />
+              Inserir linha (ENSINART)
+            </label>
+            <div class="radio-group" style="margin-bottom:10px;">
+              <label class="check">
+                <input type="radio" name="safa_mode" id="safa_mode_todos" value="todos" checked />
+                Processar todos os itens
+              </label>
+              <label class="check" style="margin-top:6px;">
+                <input type="radio" name="safa_mode" id="safa_mode_sel" value="selecionados" />
+                Processar apenas itens específicos
+              </label>
+            </div>
+            <label id="safa_selection_label" style="opacity:0.45;pointer-events:none;">Itens específicos
+              <input id="safa_selection" placeholder="Ex.: 3  |  1,4,7  |  2-5  |  3; 5-9" disabled />
+            </label>
+            <button id="safa_btn" class="primary">Processar Padrão SAFA</button>
+            <pre id="safa_result"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Tab: Montagem das imagens ── -->
+      <section id="png" class="tab">
+        <div class="cols">
+          <div class="card">
+            <div class="card-header">
+              <h2>Arquivos Word</h2>
+              <button class="btn-clear" id="png_clear_list">
+                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Limpar lista
+              </button>
+            </div>
+            <div class="btn-row" style="margin-bottom:10px;">
+              <button id="png_pick" class="secondary">Selecionar Word(s)</button>
+            </div>
+            <textarea id="png_files" class="mono" placeholder="Um caminho por linha" style="min-height:200px;"></textarea>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h2>Configurações de montagem</h2>
+            </div>
+            <label>Pasta de saída
+              <div class="btn-row">
+                <input id="png_out" placeholder="Selecione ou digite o caminho" />
+                <button id="png_out_pick" class="secondary" style="width:auto;white-space:nowrap;">Selecionar</button>
+              </div>
+            </label>
+            <label>DPI
+              <input id="png_dpi" type="number" value="200" style="width:100px;" />
+            </label>
+            <label class="check" style="margin-bottom:16px;">
+              <input type="checkbox" id="png_crop" checked />
+              Cortar altura ao conteúdo
+            </label>
+            <button id="png_btn" class="primary">Converter Word para PNG</button>
+            <pre id="png_result"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Log (always visible) ── -->
+      <div class="card logs">
+        <div class="card-header">
+          <h2>Log</h2>
+        </div>
+        <pre id="log"></pre>
+      </div>
+
+    </div><!-- /content-area -->
+  </main>
+</div>
+
+<script>
+/* ── Navigation ── */
+const navBtns   = document.querySelectorAll('.nav[data-tab]');
+const tabs      = document.querySelectorAll('.tab');
+const pageTitle = document.getElementById('pageTitle');
+
+const tabLabels = {
+  txt:  'Gerador de Prompt',
+  fmt:  'Formatador de item',
+  safa: 'Padrão SAFA',
+  png:  'Montagem das imagens'
+};
+
+navBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    navBtns.forEach(b => b.classList.remove('active'));
+    tabs.forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    pageTitle.textContent = tabLabels[btn.dataset.tab];
+    closeSidebar();
+  });
+});
+
+/* ── Theme toggle ── */
+const themeBtn   = document.getElementById('themeBtn');
+const themeLabel = document.getElementById('themeLabel');
+
+themeBtn.addEventListener('click', () => {
+  const isLight = document.body.classList.toggle('theme-light');
+  themeLabel.textContent = isLight ? 'Tema claro' : 'Tema escuro';
+});
+
+/* ── Mobile sidebar ── */
+const sidebar   = document.getElementById('sidebar');
+const overlay   = document.getElementById('overlay');
+const hamburger = document.getElementById('hamburger');
+
+function openSidebar() {
+  sidebar.classList.add('open');
+  overlay.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeSidebar() {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+hamburger.addEventListener('click', () => {
+  sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+});
+overlay.addEventListener('click', closeSidebar);
+
+const mq = window.matchMedia('(min-width: 641px)');
+mq.addEventListener('change', e => { if (e.matches) closeSidebar(); });
+
+/* ── SAFA: toggle item selection ── */
+const safaModeBtns = document.querySelectorAll('input[name="safa_mode"]');
+const safaSelLabel = document.getElementById('safa_selection_label');
+const safaSelInput = document.getElementById('safa_selection');
+
+function updateSafaMode() {
+  const isSel = document.getElementById('safa_mode_sel').checked;
+  safaSelInput.disabled = !isSel;
+  safaSelLabel.style.opacity = isSel ? '1' : '0.45';
+  safaSelLabel.style.pointerEvents = isSel ? 'auto' : 'none';
+  if (!isSel) safaSelInput.value = '';
+}
+safaModeBtns.forEach(btn => btn.addEventListener('change', updateSafaMode));
+
+/* ── Copy TXT ── */
+document.getElementById('copiarTxt')?.addEventListener('click', () => {
+  const el = document.getElementById('txt_saida');
+  if (el.value) navigator.clipboard.writeText(el.value).catch(() => {});
+});
+
+/* ── Formatador: Limpar e Colar ── */
+document.getElementById('fmt_clear')?.addEventListener('click', () => {
+  document.getElementById('fmt_raw').value = '';
+  document.getElementById('fmt_raw').focus();
+});
+
+document.getElementById('fmt_paste')?.addEventListener('click', async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    const el = document.getElementById('fmt_raw');
+    el.value = text;
+    el.focus();
+  } catch (err) {
+    // fallback: focus so user can paste manually
+    document.getElementById('fmt_raw').focus();
+  }
+});
+
+/* ── SAFA: Limpar lista ── */
+document.getElementById('safa_clear_list')?.addEventListener('click', () => {
+  document.getElementById('safa_files').value = '';
+  document.getElementById('safa_files').focus();
+});
+
+/* ── PNG: Limpar lista ── */
+document.getElementById('png_clear_list')?.addEventListener('click', () => {
+  document.getElementById('png_files').value = '';
+  document.getElementById('png_files').focus();
+});
+</script>
+<script src="assets/app.js" defer></script>
+</body>
+</html>
