@@ -1,11 +1,8 @@
 """
-app.py — ponto de entrada provisório do Formatador SAFA LP.
+app.py — ponto de entrada do Formatador SAFA LP.
 
 Uso:
-    python app.py
-
-Este arquivo abre a interface localizada em layout_interface/index.html.
-Ele também expõe uma API mínima para que o front-end possa começar a ser testado.
+    py app.py
 """
 
 from __future__ import annotations
@@ -19,44 +16,13 @@ from typing import Any, Dict
 BASE_DIR = Path(__file__).resolve().parent
 LAYOUT_DIR = BASE_DIR / "layout_interface"
 INDEX_HTML = LAYOUT_DIR / "index.html"
-DATA_DIR = BASE_DIR / "data"
-TEMPLATES_DIR = BASE_DIR / "templates"
 OUTPUT_DIR = BASE_DIR / "output"
 LOGS_DIR = BASE_DIR / "logs"
 
 
 def garantir_pastas() -> None:
-    for pasta in [LAYOUT_DIR, DATA_DIR, TEMPLATES_DIR, OUTPUT_DIR, LOGS_DIR]:
+    for pasta in [LAYOUT_DIR, OUTPUT_DIR, LOGS_DIR]:
         pasta.mkdir(parents=True, exist_ok=True)
-
-
-def criar_index_minimo_se_nao_existir() -> None:
-    if INDEX_HTML.exists():
-        return
-
-    INDEX_HTML.write_text(
-        """<!doctype html>
-<html lang="pt-br">
-<head>
-  <meta charset="utf-8">
-  <title>Formatador SAFA LP</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 40px; }
-    .card { border: 1px solid #ddd; border-radius: 12px; padding: 24px; max-width: 900px; }
-    code { background: #f5f5f5; padding: 2px 6px; border-radius: 4px; }
-  </style>
-</head>
-<body>
-  <div class="card">
-    <h1>Formatador SAFA — Língua Portuguesa</h1>
-    <p>A interface principal ainda não foi criada em <code>layout_interface/index.html</code>.</p>
-    <p>Este é apenas um teste para confirmar que o <code>app.py</code> está abrindo.</p>
-  </div>
-</body>
-</html>
-""",
-        encoding="utf-8",
-    )
 
 
 class Api:
@@ -68,68 +34,80 @@ class Api:
         }
 
     def carregar_matrizes(self) -> Dict[str, Any]:
-        caminho = DATA_DIR / "matrizes_portugues.json"
-        if not caminho.exists():
-            return {
-                "ok": False,
-                "erro": "Arquivo data/matrizes_portugues.json não encontrado.",
-                "dados": None,
-            }
-
         try:
+            from core.matriz_loader import MatrizLoader
+
+            loader = MatrizLoader()
             return {
                 "ok": True,
-                "dados": json.loads(caminho.read_text(encoding="utf-8")),
+                "dados": loader.data,
+                "matrizes": loader.get_matrizes_ativas(),
             }
         except Exception as exc:
             return {
                 "ok": False,
-                "erro": f"Erro ao ler matrizes_portugues.json: {exc}",
+                "erro": str(exc),
                 "dados": None,
+                "matrizes": [],
             }
 
-    def gerar_prompt(self, parametros: Dict[str, Any]) -> Dict[str, Any]:
-        modo = str(parametros.get("modo_trabalho", "")).strip().lower()
+    def listar_codigos(self, matriz_id: str, etapa_id: str) -> Dict[str, Any]:
+        try:
+            from core.matriz_loader import MatrizLoader
 
-        if "revis" in modo:
-            template_path = TEMPLATES_DIR / "prompt_portugues_revisao_item.txt"
-        else:
-            template_path = TEMPLATES_DIR / "prompt_portugues_novo_item.txt"
-
-        if not template_path.exists():
+            loader = MatrizLoader()
+            return {
+                "ok": True,
+                "codigos": loader.get_codigos(matriz_id, etapa_id),
+            }
+        except Exception as exc:
             return {
                 "ok": False,
-                "erro": f"Template não encontrado: {template_path.name}",
-                "prompt": "",
+                "erro": str(exc),
+                "codigos": [],
             }
 
-        template = template_path.read_text(encoding="utf-8")
+    def buscar_codigo(self, matriz_id: str, etapa_id: str, codigo_digitado: str) -> Dict[str, Any]:
+        try:
+            from core.matriz_loader import MatrizLoader
 
-        prompt = template
-        for chave, valor in parametros.items():
-            prompt = prompt.replace("{{" + chave + "}}", str(valor or ""))
+            loader = MatrizLoader()
+            encontrado = loader.buscar_codigo(matriz_id, etapa_id, codigo_digitado)
+            if not encontrado:
+                return {
+                    "ok": False,
+                    "erro": "Código não encontrado para a matriz e etapa selecionadas.",
+                    "codigo": None,
+                }
+            return {"ok": True, "codigo": encontrado}
+        except Exception as exc:
+            return {"ok": False, "erro": str(exc), "codigo": None}
 
-        return {
-            "ok": True,
-            "prompt": prompt,
-        }
+    def gerar_prompt(self, parametros: Dict[str, Any]) -> Dict[str, Any]:
+        try:
+            from core.prompt_engine import PromptEngine
+
+            prompt = PromptEngine().gerar_prompt(parametros)
+            return {"ok": True, "prompt": prompt}
+        except Exception as exc:
+            return {"ok": False, "erro": str(exc), "prompt": ""}
 
     def formatar_item_docx(self, texto_bruto: str, caminho_saida: str = "") -> Dict[str, Any]:
         return {
             "ok": False,
-            "erro": "Função ainda não implementada. Implementar em core/word_formatter.py.",
+            "erro": "Função ainda não conectada à interface. Implementar chamada de core/word_formatter.py.",
         }
 
     def processar_padrao_safa(self, parametros: Dict[str, Any]) -> Dict[str, Any]:
         return {
             "ok": False,
-            "erro": "Função ainda não implementada. Implementar em core/safa_processor.py.",
+            "erro": "Função ainda não conectada à interface. Implementar chamada de core/safa_processor.py.",
         }
 
     def converter_docx_para_png(self, parametros: Dict[str, Any]) -> Dict[str, Any]:
         return {
             "ok": False,
-            "erro": "Função ainda não implementada. Implementar em core/png_converter.py.",
+            "erro": "Função ainda não conectada à interface. Implementar chamada de core/png_converter.py.",
         }
 
 
@@ -141,9 +119,9 @@ def abrir_com_pywebview() -> None:
         title="Formatador SAFA — Língua Portuguesa",
         url=str(INDEX_HTML),
         js_api=api,
-        width=1200,
-        height=800,
-        min_size=(1000, 700),
+        width=1280,
+        height=850,
+        min_size=(1100, 750),
     )
     webview.start(debug=True)
 
@@ -151,13 +129,11 @@ def abrir_com_pywebview() -> None:
 def abrir_no_navegador_como_fallback() -> None:
     webbrowser.open(INDEX_HTML.as_uri())
     print("pywebview não está instalado. Abrindo interface no navegador.")
-    print("Para usar a integração completa, instale as dependências com:")
-    print("pip install -r requirements.txt")
+    print("Para usar a integração completa, instale as dependências com: py -m pip install pywebview")
 
 
 def main() -> None:
     garantir_pastas()
-    criar_index_minimo_se_nao_existir()
 
     if not INDEX_HTML.exists():
         print(f"Erro: interface não encontrada em {INDEX_HTML}")
@@ -170,6 +146,7 @@ def main() -> None:
     except Exception as exc:
         print(f"Erro ao abrir o programa: {exc}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

@@ -101,3 +101,42 @@ footer { padding: 10px 20px; background: #f1f5f9; font-size: 0.8rem; border-top:
 .required-empty { border-color: var(--error) !important; }
 .alert-error { color: var(--error); background: #fee2e2; border-color: #fecaca; }
 .alert-success { color: var(--success); background: #dcfce7; border-color: #bbf7d0; }
+
+/* Ajustes da aba Formulador de Prompt */
+.full-width {
+    grid-column: 1 / -1;
+}
+
+.hint {
+    margin: 0 0 18px 0;
+    color: #5f6b7a;
+    font-size: 0.95rem;
+}
+
+.alert-container {
+    margin-top: 14px;
+}
+
+.alert {
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin: 8px 0;
+    font-weight: 600;
+}
+
+.alert.erro {
+    background: #fff1f1;
+    border: 1px solid #e6a1a1;
+    color: #842029;
+}
+
+.alert.ok {
+    background: #eef8f0;
+    border: 1px solid #9ad1a5;
+    color: #0f5132;
+}
+
+#f-codigo-completo {
+    background: #f8f9fb;
+    font-weight: 600;
+}

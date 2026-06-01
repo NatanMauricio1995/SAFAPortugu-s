@@ -124,3 +124,213 @@
     <script src="scripts.js"></script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formatador SAFA — Língua Portuguesa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>Formatador SAFA — Língua Portuguesa</h1>
+            <nav class="tab-bar">
+                <button class="tab-link active" onclick="openTab(event, 'tab-formulador')">Formulador de Prompt</button>
+                <button class="tab-link" onclick="openTab(event, 'tab-formatador')">Formatador de Item</button>
+                <button class="tab-link" onclick="openTab(event, 'tab-safa')">Padrão SAFA</button>
+                <button class="tab-link" onclick="openTab(event, 'tab-imagens')">Montagem das Imagens</button>
+            </nav>
+        </header>
+
+        <main>
+            <section id="tab-formulador" class="tab-content active">
+                <h2>Formulador de Prompt</h2>
+                <p class="hint">Preencha os parâmetros do item. A matriz e a etapa são carregadas do arquivo <code>data/matrizes_portugues.json</code>.</p>
+
+                <div class="grid-form">
+                    <div class="form-group">
+                        <label for="f-modo">Modo de trabalho:</label>
+                        <select id="f-modo">
+                            <option value="Novo Item">Novo Item</option>
+                            <option value="Revisão">Revisão</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f-matriz">Matriz-base:</label>
+                        <select id="f-matriz">
+                            <option value="">Carregando matrizes...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f-etapa">Etapa da matriz:</label>
+                        <select id="f-etapa">
+                            <option value="">Selecione a matriz primeiro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f-ano-alvo">Ano em que o item será feito:</label>
+                        <select id="f-ano-alvo">
+                            <option value="2º ano">2º ano</option>
+                            <option value="3º ano">3º ano</option>
+                            <option value="4º ano">4º ano</option>
+                            <option value="5º ano">5º ano</option>
+                            <option value="6º ano">6º ano</option>
+                            <option value="7º ano">7º ano</option>
+                            <option value="8º ano">8º ano</option>
+                            <option value="9º ano">9º ano</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f-codigo">Código-alvo digitado:</label>
+                        <input type="text" id="f-codigo" placeholder="Ex.: D1, D3, 5L.1.02">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f-codigo-completo">Código completo encontrado:</label>
+                        <input type="text" id="f-codigo-completo" readonly placeholder="Digite o código para exibir a descrição completa">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f-dificuldade">Dificuldade:</label>
+                        <select id="f-dificuldade">
+                            <option value="Fácil">Fácil</option>
+                            <option value="Médio">Médio</option>
+                            <option value="Difícil">Difícil</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f-gabarito">Gabarito desejado / informado:</label>
+                        <select id="f-gabarito">
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="Não informado">Não informado</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f-tipo-suporte">Tipo de suporte:</label>
+                        <select id="f-tipo-suporte">
+                            <option value="Sem suporte">Sem suporte</option>
+                            <option value="Texto-base">Texto-base</option>
+                            <option value="Imagem">Imagem</option>
+                            <option value="Tabela">Tabela</option>
+                            <option value="Gráfico">Gráfico</option>
+                            <option value="Malha">Malha</option>
+                            <option value="Outro">Outro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="f-tema-contexto">Tema/contexto:</label>
+                        <input type="text" id="f-tema-contexto" placeholder="Ex.: água nas casas">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="f-descricao-suporte">Descrição/conteúdo do suporte:</label>
+                        <textarea id="f-descricao-suporte" rows="3" placeholder="Descreva a imagem, tabela, gráfico, malha ou outro suporte, se houver."></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="f-texto-base">Texto-base:</label>
+                        <textarea id="f-texto-base" rows="4" placeholder="Cole aqui o texto-base, se houver."></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="f-fonte-autor">Fonte/autor:</label>
+                        <input type="text" id="f-fonte-autor" placeholder="Obrigatório se houver texto-base. Ex.: Texto elaborado para fins didáticos.">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="f-restricoes">Restrições:</label>
+                        <textarea id="f-restricoes" rows="3" placeholder="Informe restrições pedagógicas ou técnicas."></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="f-item-base">Item-base / Item para revisão:</label>
+                        <textarea id="f-item-base" rows="5" placeholder="Cole aqui o item-base ou item para revisão."></textarea>
+                    </div>
+                </div>
+
+                <div id="f-alerta" class="alert-container"></div>
+
+                <div class="actions">
+                    <button class="btn-primary" id="btn-gerar-prompt">Gerar Prompt</button>
+                    <button class="btn-secondary" onclick="copyToClipboard('f-prompt-result')">Copiar Prompt</button>
+                    <button class="btn-secondary" onclick="clearField('f-prompt-result')">Limpar Prompt</button>
+                </div>
+
+                <div class="output-group">
+                    <label for="f-prompt-result">Prompt Gerado:</label>
+                    <textarea id="f-prompt-result" readonly rows="10"></textarea>
+                </div>
+            </section>
+
+            <section id="tab-formatador" class="tab-content">
+                <div class="form-group">
+                    <label>Texto Bruto do Item:</label>
+                    <textarea id="i-texto-bruto" rows="12" placeholder="Cole aqui o conteúdo gerado pela IA..."></textarea>
+                </div>
+                <div class="actions">
+                    <button class="btn-secondary" onclick="clearField('i-texto-bruto')">Limpar</button>
+                    <button class="btn-primary" onclick="window.dispatchEvent(new CustomEvent('gerar-docx'))">Gerar Documento (.docx)</button>
+                </div>
+                <div id="i-alertas" class="alert-container"></div>
+            </section>
+
+            <section id="tab-safa" class="tab-content">
+                <div class="form-group">
+                    <label>Arquivos .docx de Origem:</label>
+                    <input type="text" id="s-arquivos-path" readonly placeholder="Nenhum arquivo selecionado">
+                    <button class="btn-secondary" onclick="window.dispatchEvent(new CustomEvent('selecionar-arquivos'))">Selecionar Arquivos</button>
+                </div>
+                <div class="form-group">
+                    <label>Intervalo de Itens (ex: 1, 3-5, 8):</label>
+                    <input type="text" id="s-intervalo" placeholder="Todos">
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="s-ensinart"> Incluir Logotipo ENSINART</label>
+                </div>
+                <div class="actions">
+                    <button class="btn-primary" onclick="window.dispatchEvent(new CustomEvent('processar-safa'))">Processar Padrão SAFA (6 Págs)</button>
+                </div>
+                <div id="s-log" class="log-container"></div>
+            </section>
+
+            <section id="tab-imagens" class="tab-content">
+                <div class="form-group">
+                    <label>Selecionar Pasta ou Arquivos (.docx):</label>
+                    <input type="text" id="img-path" readonly placeholder="Nenhum arquivo selecionado">
+                    <button class="btn-secondary" onclick="window.dispatchEvent(new CustomEvent('selecionar-img-path'))">Selecionar</button>
+                </div>
+                <div class="grid-form">
+                    <div class="form-group">
+                        <label>DPI de Renderização:</label>
+                        <input type="number" id="img-dpi" value="200">
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="img-crop"> Cortar Fundo Branco Excedente</label>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn-primary" onclick="window.dispatchEvent(new CustomEvent('converter-png'))">Converter para PNG</button>
+                </div>
+                <div id="img-result" class="result-container"></div>
+            </section>
+        </main>
+        
+        <footer>
+            <div id="status-bar">Carregando interface...</div>
+        </footer>
+    </div>
+    <script src="scripts.js"></script>
+</body>
+</html>
