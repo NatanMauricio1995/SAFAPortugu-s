@@ -48,3 +48,32 @@ class PromptValidator:
                 erros.append("O suporte selecionado exige descrição.")
                 
         return erros
+
+    def validar_explicacao_aluno(self, dados_item: dict) -> list[str]:
+        """
+        Verifica a consistência entre o gabarito e as explicações por alternativa.
+        """
+        erros = []
+        pre_correta = "Está correta. Se você marcou esta alternativa, provavelmente"
+        pre_incorreta = "Está incorreta. Se você marcou esta alternativa, possivelmente"
+        
+        alternativas = ['A', 'B', 'C', 'D']
+        corretas_encontradas = []
+        
+        for alt in alternativas:
+            explicacao = dados_item.get(alt, "")
+            if explicacao.startswith(pre_correta):
+                corretas_encontradas.append(alt)
+                
+        total_corretas = len(corretas_encontradas)
+        
+        if total_corretas == 0:
+            erros.append("Inconsistência na explicação ao aluno: nenhuma alternativa foi marcada como correta.")
+        elif total_corretas > 1:
+            erros.append("Inconsistência na explicação ao aluno: há mais de uma alternativa marcada como correta.")
+        elif total_corretas == 1:
+            gabarito = str(dados_item.get('gabarito', '')).strip().upper()
+            if corretas_encontradas[0] != gabarito:
+                erros.append("Inconsistência na explicação ao aluno: o gabarito informado não corresponde à alternativa marcada como correta.")
+                
+        return erros
