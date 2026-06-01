@@ -1,199 +1,126 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Formatador SAFA — Língua Portuguesa</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formatador SAFA — Língua Portuguesa</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <header class="topbar">
-    <div>
-      <h1>Formatador SAFA — Língua Portuguesa</h1>
-      <p>Interface provisória para teste do programa.</p>
+    <div class="app-container">
+        <header>
+            <h1>Formatador SAFA</h1>
+            <nav class="tab-bar">
+                <button class="tab-link active" onclick="openTab(event, 'tab-formulador')">Formulador de Prompt</button>
+                <button class="tab-link" onclick="openTab(event, 'tab-formatador')">Formatador de Item</button>
+                <button class="tab-link" onclick="openTab(event, 'tab-safa')">Padrão SAFA</button>
+                <button class="tab-link" onclick="openTab(event, 'tab-imagens')">Montagem das Imagens</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- ABA 1: FORMULADOR DE PROMPT -->
+            <section id="tab-formulador" class="tab-content active">
+                <div class="grid-form">
+                    <div class="form-group">
+                        <label>Matriz-base:</label>
+                        <select id="f-matriz"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Etapa:</label>
+                        <select id="f-etapa"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Código-alvo:</label>
+                        <input type="text" id="f-codigo" placeholder="Ex: EF15LP03">
+                    </div>
+                    <div class="form-group">
+                        <label>Dificuldade:</label>
+                        <select id="f-dificuldade">
+                            <option value="Fácil">Fácil</option>
+                            <option value="Média">Média</option>
+                            <option value="Difícil">Difícil</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Texto-base / Suporte:</label>
+                    <textarea id="f-texto-base" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Item-base / Restrições:</label>
+                    <textarea id="f-item-base" rows="4"></textarea>
+                </div>
+                <div class="actions">
+                    <button class="btn-primary" onclick="window.dispatchEvent(new CustomEvent('gerar-prompt'))">Gerar Prompt</button>
+                </div>
+                <div class="output-group">
+                    <label>Prompt Gerado:</label>
+                    <textarea id="f-prompt-result" readonly rows="8"></textarea>
+                    <button class="btn-secondary" onclick="copyToClipboard('f-prompt-result')">Copiar Prompt</button>
+                </div>
+            </section>
+
+            <!-- ABA 2: FORMATADOR DE ITEM -->
+            <section id="tab-formatador" class="tab-content">
+                <div class="form-group">
+                    <label>Texto Bruto do Item:</label>
+                    <textarea id="i-texto-bruto" rows="12" placeholder="Cole aqui o conteúdo gerado pela IA..."></textarea>
+                </div>
+                <div class="actions">
+                    <button class="btn-secondary" onclick="clearField('i-texto-bruto')">Limpar</button>
+                    <button class="btn-primary" onclick="window.dispatchEvent(new CustomEvent('gerar-docx'))">Gerar Documento (.docx)</button>
+                </div>
+                <div id="i-alertas" class="alert-container"></div>
+            </section>
+
+            <!-- ABA 3: PADRÃO SAFA -->
+            <section id="tab-safa" class="tab-content">
+                <div class="form-group">
+                    <label>Arquivos .docx de Origem:</label>
+                    <input type="text" id="s-arquivos-path" readonly placeholder="Nenhum arquivo selecionado">
+                    <button class="btn-secondary" onclick="window.dispatchEvent(new CustomEvent('selecionar-arquivos'))">Selecionar Arquivos</button>
+                </div>
+                <div class="form-group">
+                    <label>Intervalo de Itens (ex: 1, 3-5, 8):</label>
+                    <input type="text" id="s-intervalo" placeholder="Todos">
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="s-ensinart"> Incluir Logotipo ENSINART</label>
+                </div>
+                <div class="actions">
+                    <button class="btn-primary" onclick="window.dispatchEvent(new CustomEvent('processar-safa'))">Processar Padrão SAFA (6 Págs)</button>
+                </div>
+                <div id="s-log" class="log-container"></div>
+            </section>
+
+            <!-- ABA 4: MONTAGEM DAS IMAGENS -->
+            <section id="tab-imagens" class="tab-content">
+                <div class="form-group">
+                    <label>Selecionar Pasta ou Arquivos (.docx):</label>
+                    <input type="text" id="img-path" readonly placeholder="Nenhum arquivo selecionado">
+                    <button class="btn-secondary" onclick="window.dispatchEvent(new CustomEvent('selecionar-img-path'))">Selecionar</button>
+                </div>
+                <div class="grid-form">
+                    <div class="form-group">
+                        <label>DPI de Renderização:</label>
+                        <input type="number" id="img-dpi" value="200">
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="img-crop"> Cortar Fundo Branco Excedente</label>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn-primary" onclick="window.dispatchEvent(new CustomEvent('converter-png'))">Converter para PNG</button>
+                </div>
+                <div id="img-result" class="result-container"></div>
+            </section>
+        </main>
+        
+        <footer>
+            <div id="status-bar">Aguardando interação...</div>
+        </footer>
     </div>
-  </header>
-
-  <main class="container">
-    <div class="status" id="status">
-      Carregando interface...
-    </div>
-
-    <nav class="tabs" aria-label="Abas do programa">
-      <button class="tab-btn active" data-tab="prompt">Formulador de Prompt</button>
-      <button class="tab-btn" data-tab="formatador">Formatador de Item</button>
-      <button class="tab-btn" data-tab="safa">Padrão SAFA</button>
-      <button class="tab-btn" data-tab="png">Montagem das Imagens</button>
-    </nav>
-
-    <section class="tab active" id="tab-prompt">
-      <h2>Aba 1 — Formulador de Prompt</h2>
-      <p class="muted">Teste inicial da tela. Esta interface ainda é provisória.</p>
-
-      <div class="grid">
-        <div>
-          <label for="componente">Componente</label>
-          <input id="componente" value="Língua Portuguesa" readonly>
-        </div>
-
-        <div>
-          <label for="modo_trabalho">Modo de trabalho</label>
-          <select id="modo_trabalho">
-            <option>Novo Item</option>
-            <option>Revisão</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="matriz_base">Matriz-base</label>
-          <select id="matriz_base">
-            <option>SAEB 2001</option>
-            <option>SAEB 2018</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="etapa_matriz">Etapa da matriz</label>
-          <select id="etapa_matriz">
-            <option>5º ano</option>
-            <option>9º ano</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="ano_alvo">Ano-alvo</label>
-          <select id="ano_alvo">
-            <option>2º ano</option>
-            <option>3º ano</option>
-            <option>4º ano</option>
-            <option>5º ano</option>
-            <option>6º ano</option>
-            <option>7º ano</option>
-            <option>8º ano</option>
-            <option>9º ano</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="codigo_alvo">Código-alvo</label>
-          <select id="codigo_alvo">
-            <option>D1 - Localizar informações explícitas em um texto</option>
-            <option>D3 - Inferir o sentido de uma palavra ou expressão</option>
-            <option>D4 - Inferir uma informação implícita em um texto</option>
-            <option>D6 - Identificar o tema de um texto</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="dificuldade">Dificuldade</label>
-          <select id="dificuldade">
-            <option>Fácil</option>
-            <option>Médio</option>
-            <option>Difícil</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="gabarito">Gabarito desejado / informado</label>
-          <select id="gabarito">
-            <option>A</option>
-            <option>B</option>
-            <option>C</option>
-            <option>D</option>
-            <option>Não informado</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="tipo_suporte">Tipo de suporte</label>
-          <select id="tipo_suporte">
-            <option>Sem suporte</option>
-            <option>Texto-base</option>
-            <option>Imagem</option>
-            <option>Tabela</option>
-            <option>Gráfico</option>
-            <option>Malha</option>
-            <option>Outro</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="tema_contexto">Tema/contexto</label>
-          <input id="tema_contexto" placeholder="Ex.: água nas casas">
-        </div>
-
-        <div class="full">
-          <label for="texto_base">Texto-base</label>
-          <textarea id="texto_base" placeholder="Cole aqui o texto-base, se houver."></textarea>
-        </div>
-
-        <div>
-          <label for="fonte_autor">Fonte/autor</label>
-          <input id="fonte_autor" placeholder="Ex.: Texto elaborado para fins didáticos.">
-        </div>
-
-        <div>
-          <label for="descricao_suporte">Descrição do suporte</label>
-          <input id="descricao_suporte" placeholder="Descreva imagem, tabela, gráfico etc.">
-        </div>
-
-        <div class="full">
-          <label for="restricoes">Restrições</label>
-          <textarea id="restricoes" placeholder="Informe restrições pedagógicas ou técnicas."></textarea>
-        </div>
-
-        <div class="full">
-          <label for="item_base">Item-base / Item para revisão</label>
-          <textarea id="item_base" placeholder="Cole aqui o item-base ou item para revisão."></textarea>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button class="primary" type="button" onclick="testarBackend()">Testar backend</button>
-        <button class="primary" type="button" onclick="carregarMatrizes()">Carregar matrizes</button>
-        <button class="primary" type="button" onclick="gerarPromptTeste()">Gerar prompt de teste</button>
-        <button class="secondary" type="button" onclick="limparSaida()">Limpar saída</button>
-      </div>
-
-      <h3>Saída</h3>
-      <pre id="saida">Aguardando ação...</pre>
-    </section>
-
-    <section class="tab" id="tab-formatador">
-      <h2>Aba 2 — Formatador de Item</h2>
-      <p>Esta aba será ligada ao módulo <code>core/word_formatter.py</code>.</p>
-
-      <label for="texto_bruto">Texto bruto</label>
-      <textarea id="texto_bruto" placeholder="Cole aqui o texto bruto do item."></textarea>
-
-      <div class="actions">
-        <button class="primary" type="button" onclick="funcaoNaoImplementada('Formatador de Item')">Gerar Word</button>
-        <button class="secondary" type="button" onclick="document.getElementById('texto_bruto').value = ''">Limpar</button>
-      </div>
-    </section>
-
-    <section class="tab" id="tab-safa">
-      <h2>Aba 3 — Padrão SAFA</h2>
-      <p>Esta aba será ligada ao módulo <code>core/safa_processor.py</code>.</p>
-      <p class="muted">Limitador previsto: <code># Item 1</code>, <code># Item 2</code>, etc.</p>
-
-      <div class="actions">
-        <button class="primary" type="button" onclick="funcaoNaoImplementada('Padrão SAFA')">Processar Padrão SAFA</button>
-      </div>
-    </section>
-
-    <section class="tab" id="tab-png">
-      <h2>Aba 4 — Montagem das Imagens</h2>
-      <p>Esta aba será ligada ao módulo <code>core/png_converter.py</code>.</p>
-      <p class="muted">Requer Windows com Microsoft Word instalado.</p>
-
-      <div class="actions">
-        <button class="primary" type="button" onclick="funcaoNaoImplementada('Montagem das Imagens')">Converter DOCX para PNG</button>
-      </div>
-    </section>
-  </main>
-
-  <script src="scripts.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
